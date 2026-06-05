@@ -1,12 +1,11 @@
 from groq import Groq
 from src.config import GROQ_API_KEY, GROQ_MODEL
 
-
 client = Groq(api_key=GROQ_API_KEY)
 
 
 def build_prompt(evidence: str, doc_name: str, style_rules: list = None) -> str:
-    """Build the prompt for draft generation."""
+    """Build the prompt for draft generation with evidence citation."""
     rules_section = ""
     if style_rules:
         rules_text = "\n".join(f"- {rule}" for rule in style_rules)
@@ -19,15 +18,23 @@ OPERATOR STYLE PREFERENCES (learned from past edits — follow these):
 
 DOCUMENT: {doc_name}
 {rules_section}
-RETRIEVED EVIDENCE:
+RETRIEVED EVIDENCE (each block is labeled with its Evidence ID):
 {evidence}
 
 INSTRUCTIONS:
 - Write a structured case fact summary using ONLY the evidence above
 - Do NOT add any information not present in the evidence
+- After each section heading, cite which Evidence IDs support that section like this: [Sources: E1, E3]
 - Use these sections: Overview, Key Parties, Key Dates & Events, Critical Facts, Flags & Concerns
 - If a section has no evidence, write "No information found in source document"
 - Be concise and factual
+
+EXAMPLE FORMAT:
+**Overview** [Sources: E1, E2]
+The case involves...
+
+**Key Parties** [Sources: E1]
+- Plaintiff: ...
 
 CASE FACT SUMMARY:"""
 
@@ -46,7 +53,7 @@ def generate_draft(evidence: str, doc_name: str, style_rules: list = None) -> di
         messages=[
             {
                 "role": "system",
-                "content": "You are a precise legal document analyst. Always ground your output strictly in provided evidence. Never hallucinate or assume facts."
+                "content": "You are a precise legal document analyst. Always ground your output strictly in provided evidence. Always cite Evidence IDs after each section heading. Never hallucinate or assume facts."
             },
             {
                 "role": "user",

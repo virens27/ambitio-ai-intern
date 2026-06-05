@@ -3,16 +3,12 @@ from sentence_transformers import SentenceTransformer
 import faiss
 from typing import List, Dict
 
-
 # Load the embedding model once
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
 
 def build_index(chunks: List[Dict]) -> tuple:
-    """
-    Build a FAISS index from text chunks.
-    Returns the index and the list of embeddings.
-    """
+    """Build a FAISS index from text chunks."""
     print(f"[Retriever] Building index over {len(chunks)} chunks...")
     texts = [chunk["text"] for chunk in chunks]
     embeddings = model.encode(texts, show_progress_bar=False)
@@ -27,10 +23,7 @@ def build_index(chunks: List[Dict]) -> tuple:
 
 
 def retrieve(query: str, chunks: List[Dict], index, top_k: int = 5) -> List[Dict]:
-    """
-    Retrieve top_k most relevant chunks for a given query.
-    Returns chunks with their relevance scores.
-    """
+    """Retrieve top_k most relevant chunks for a given query."""
     print(f"[Retriever] Retrieving top {top_k} chunks for query...")
     query_embedding = model.encode([query]).astype("float32")
     distances, indices = index.search(query_embedding, top_k)
@@ -39,6 +32,7 @@ def retrieve(query: str, chunks: List[Dict], index, top_k: int = 5) -> List[Dict
     for rank, (dist, idx) in enumerate(zip(distances[0], indices[0])):
         if idx < len(chunks):
             chunk = chunks[idx].copy()
+            chunk["evidence_id"] = f"E{rank + 1}"
             chunk["relevance_score"] = float(1 / (1 + dist))
             chunk["rank"] = rank + 1
             results.append(chunk)
@@ -50,12 +44,12 @@ def retrieve(query: str, chunks: List[Dict], index, top_k: int = 5) -> List[Dict
 def format_evidence(retrieved_chunks: List[Dict]) -> str:
     """
     Format retrieved chunks into a readable evidence block
-    to pass into the LLM prompt.
+    with clear Evidence IDs for citation in the draft.
     """
     evidence_parts = []
     for chunk in retrieved_chunks:
         evidence_parts.append(
-            f"[Evidence {chunk['rank']} | Score: {chunk['relevance_score']:.3f}]\n"
+            f"[{chunk['evidence_id']} | Relevance: {chunk['relevance_score']:.3f}]\n"
             f"{chunk['text']}"
         )
     return "\n\n".join(evidence_parts)
