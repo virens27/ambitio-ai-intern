@@ -14,7 +14,41 @@ A production-ready pipeline that ingests messy legal-style documents, extracts s
 | Stage 3 | Draft Generation | Groq LLaMA-3.3-70b |
 | Stage 4 | Improvement Loop | Edit diff → Rule extraction → Memory |
 
----
+### Pipeline Flow
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                      INPUT: PDF File                     │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│           STAGE 1: Document Processing                   │
+│   PyMuPDF → pdfplumber → OCR (fallback chain)           │
+│   Output: cleaned text + overlapping chunks             │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│           STAGE 2: Grounded Retrieval                    │
+│   SentenceTransformers → FAISS index → Top-K chunks     │
+│   Output: ranked evidence with relevance scores         │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│           STAGE 3: Draft Generation                      │
+│   Evidence + Style Rules → Groq LLaMA-3.3-70b          │
+│   Output: grounded case fact summary (JSON)             │
+└─────────────────────┬───────────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────────┐
+│           STAGE 4: Improvement Loop                      │
+│   Operator edits → LLM rule extraction → Memory        │
+│   Output: updated edit_memory.json for future drafts   │
+└─────────────────────────────────────────────────────────┘
+```
 
 ## Features
 
