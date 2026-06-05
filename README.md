@@ -111,6 +111,8 @@ A structured case fact summary with Overview, Key Parties, Key Dates & Events, C
 ---
 
 ## Project Structure
+
+```
 ambitio-ai-intern/
 ├── src/
 │   ├── document_processing/
@@ -129,3 +131,4 @@ ambitio-ai-intern/
 ├── ARCHITECTURE.md             # System architecture details
 ├── requirements.txt
 └── .env                        # API keys (not committed)
+```
