@@ -4,116 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ambitio Legal Document Pipeline</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #0f1117; color: #e0e0e0; min-height: 100vh; }
 
         .header {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
-            padding: 20px 40px;
+            padding: 18px 40px;
             border-bottom: 2px solid #c0392b;
             display: flex;
             align-items: center;
             gap: 15px;
         }
-        .header h1 { font-size: 24px; color: #fff; }
-        .header span { color: #c0392b; font-weight: bold; font-size: 28px; }
+        .header .brand { color: #c0392b; font-weight: 800; font-size: 26px; letter-spacing: -1px; }
+        .header h1 { font-size: 20px; color: #fff; font-weight: 800; }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 30px 20px; }
+        .container { max-width: 1300px; margin: 0 auto; padding: 28px 20px; }
 
         .pipeline-steps {
             display: flex;
             gap: 10px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
+            margin-bottom: 28px;
         }
         .step {
             background: #1e2130;
             border: 1px solid #2d3148;
             border-radius: 8px;
-            padding: 12px 20px;
+            padding: 14px 20px;
             flex: 1;
-            min-width: 180px;
             text-align: center;
+            transition: all 0.4s;
         }
-        .step .num { color: #c0392b; font-size: 20px; font-weight: bold; }
-        .step .label { font-size: 12px; color: #888; margin-top: 4px; }
+        .step .num { color: #555; font-size: 22px; font-weight: 700; }
+        .step .label { font-size: 11px; color: #555; margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
         .step.active { border-color: #c0392b; background: #2a1520; }
+        .step.active .num { color: #c0392b; }
+        .step.active .label { color: #c0392b; }
         .step.done { border-color: #27ae60; background: #152a1e; }
+        .step.done .num { color: #27ae60; }
+        .step.done .label { color: #27ae60; }
 
         .card {
             background: #1e2130;
             border: 1px solid #2d3148;
             border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 20px;
+            padding: 22px;
+            margin-bottom: 18px;
         }
-        .card h2 { font-size: 16px; color: #c0392b; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 1px; }
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #c0392b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .card-title svg { width: 16px; height: 16px; stroke: #c0392b; }
 
         .upload-area {
             border: 2px dashed #2d3148;
             border-radius: 10px;
-            padding: 40px;
+            padding: 36px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
         }
         .upload-area:hover { border-color: #c0392b; background: #1a0f0f; }
         .upload-area input { display: none; }
-        .upload-area .icon { font-size: 48px; margin-bottom: 10px; }
-        .upload-area p { color: #888; font-size: 14px; }
-        .upload-area .filename { color: #27ae60; font-weight: bold; margin-top: 8px; }
+        .upload-icon { margin: 0 auto 12px; width: 48px; height: 48px; stroke: #555; }
+        .upload-area p { color: #666; font-size: 13px; margin-top: 4px; }
+        .upload-area .filename { color: #27ae60; font-weight: 600; margin-top: 10px; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .upload-area .filename svg { width: 16px; height: 16px; stroke: #27ae60; }
 
         .btn {
             background: #c0392b;
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 13px 30px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
             transition: all 0.3s;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
+        .btn svg { width: 16px; height: 16px; stroke: white; }
         .btn:hover { background: #a93226; transform: translateY(-1px); }
-        .btn:disabled { background: #444; cursor: not-allowed; transform: none; }
-        .btn-secondary {
-            background: #27ae60;
-        }
-        .btn-secondary:hover { background: #229954; }
+        .btn:disabled { background: #333; color: #666; cursor: not-allowed; transform: none; }
+        .btn:disabled svg { stroke: #666; }
+        .btn-green { background: #27ae60; }
+        .btn-green:hover { background: #229954; }
 
         .stats {
             display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            gap: 12px;
         }
         .stat {
             background: #252840;
             border-radius: 8px;
-            padding: 12px 20px;
+            padding: 14px;
             flex: 1;
-            min-width: 120px;
             text-align: center;
         }
-        .stat .val { font-size: 24px; font-weight: bold; color: #c0392b; }
-        .stat .key { font-size: 11px; color: #888; margin-top: 2px; }
+        .stat .val { font-size: 26px; font-weight: 700; color: #c0392b; }
+        .stat .key { font-size: 11px; color: #666; margin-top: 3px; }
 
         .draft-output {
             background: #0d1117;
             border: 1px solid #2d3148;
             border-radius: 8px;
             padding: 20px;
-            white-space: pre-wrap;
             font-size: 14px;
-            line-height: 1.8;
-            max-height: 500px;
+            line-height: 1.9;
+            max-height: 480px;
             overflow-y: auto;
         }
-        .draft-output .section-header { color: #c0392b; font-weight: bold; }
-        .draft-output .source-tag { color: #3498db; font-size: 12px; }
+        .draft-section { margin-bottom: 16px; }
+        .draft-section-title {
+            color: #c0392b;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        .draft-source-tag {
+            color: #3498db;
+            font-size: 11px;
+            font-weight: 500;
+            margin-left: 6px;
+        }
+        .draft-section-body {
+            color: #ccc;
+            font-size: 13px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
 
         .evidence-list { display: flex; flex-direction: column; gap: 10px; }
         .evidence-item {
@@ -121,27 +155,25 @@
             border-left: 3px solid #c0392b;
             border-radius: 4px;
             padding: 12px 15px;
-            font-size: 13px;
         }
-        .evidence-item .ev-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 6px;
-        }
-        .evidence-item .ev-id { color: #c0392b; font-weight: bold; }
-        .evidence-item .ev-score { color: #27ae60; font-size: 12px; }
-        .evidence-item .ev-text { color: #aaa; line-height: 1.5; }
+        .ev-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .ev-id { color: #c0392b; font-weight: 700; font-size: 13px; }
+        .ev-score { color: #27ae60; font-size: 12px; }
+        .ev-text { color: #888; font-size: 12px; line-height: 1.6; }
 
         .rules-list { display: flex; flex-direction: column; gap: 8px; }
         .rule-item {
             background: #0d1117;
             border-left: 3px solid #27ae60;
             border-radius: 4px;
-            padding: 10px 15px;
+            padding: 10px 14px;
             font-size: 13px;
             color: #aaa;
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
         }
-        .rule-num { color: #27ae60; font-weight: bold; margin-right: 8px; }
+        .rule-num { color: #27ae60; font-weight: 700; min-width: 20px; }
 
         textarea {
             width: 100%;
@@ -153,51 +185,55 @@
             font-size: 13px;
             line-height: 1.8;
             resize: vertical;
-            min-height: 300px;
+            min-height: 280px;
             font-family: 'Segoe UI', sans-serif;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-            color: #888;
-        }
+        .loading { display: none; text-align: center; padding: 16px; color: #888; }
         .spinner {
             border: 3px solid #2d3148;
             border-top: 3px solid #c0392b;
             border-radius: 50%;
-            width: 30px;
-            height: 30px;
+            width: 28px; height: 28px;
             animation: spin 1s linear infinite;
             margin: 0 auto 10px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
         .hidden { display: none; }
-        .success-msg { color: #27ae60; font-size: 13px; margin-top: 10px; text-align: center; }
+        .success-msg { color: #27ae60; font-size: 13px; margin-top: 10px; text-align: center; display: flex; align-items: center; justify-content: center; gap: 6px; }
+        .success-msg svg { width: 15px; height: 15px; stroke: #27ae60; }
         .error-msg { color: #e74c3c; font-size: 13px; margin-top: 10px; text-align: center; }
 
-        .tabs { display: flex; gap: 5px; margin-bottom: 15px; }
+        .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
         .tab {
-            padding: 8px 20px;
+            padding: 8px 18px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
             background: #252840;
             border: 1px solid #2d3148;
-            color: #888;
+            color: #777;
+            transition: all 0.2s;
         }
         .tab.active { background: #c0392b; color: white; border-color: #c0392b; }
-
         .tab-content { display: none; }
         .tab-content.active { display: block; }
+
+        .empty-state { color: #444; font-size: 13px; text-align: center; padding: 10px 0; }
+
+        .edit-hint {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <span>ambitio.</span>
+    <span class="brand">ambitio.</span>
     <h1>Legal Document Intelligence Pipeline</h1>
 </div>
 
@@ -227,18 +263,25 @@
 
         <!-- Left Column -->
         <div>
-            <!-- Upload Card -->
+            <!-- Upload -->
             <div class="card">
-                <h2>📄 Upload Document</h2>
+                <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    Upload Document
+                </div>
                 <div class="upload-area" onclick="document.getElementById('fileInput').click()">
                     <input type="file" id="fileInput" accept=".pdf" onchange="handleFileSelect(this)">
-                    <div class="icon">📁</div>
-                    <p>Click to upload a PDF document</p>
+                    <svg class="upload-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                    <p style="font-size:14px; color:#aaa;">Click to upload a PDF document</p>
                     <p>Supports digital, scanned, and image-based PDFs</p>
-                    <div class="filename" id="fileName"></div>
+                    <div class="filename hidden" id="fileName">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        <span id="fileNameText"></span>
+                    </div>
                 </div>
                 <button class="btn" id="processBtn" onclick="processDocument()" disabled>
-                    ⚡ Run Pipeline
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"/></svg>
+                    Run Pipeline
                 </button>
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
@@ -247,65 +290,63 @@
                 <div id="uploadMsg"></div>
             </div>
 
-            <!-- Stats Card -->
+            <!-- Stats -->
             <div class="card hidden" id="statsCard">
-                <h2>📊 Processing Stats</h2>
+                <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+                    Processing Stats
+                </div>
                 <div class="stats">
-                    <div class="stat">
-                        <div class="val" id="statWords">-</div>
-                        <div class="key">Words Extracted</div>
-                    </div>
-                    <div class="stat">
-                        <div class="val" id="statChunks">-</div>
-                        <div class="key">Chunks Created</div>
-                    </div>
-                    <div class="stat">
-                        <div class="val" id="statRules">-</div>
-                        <div class="key">Style Rules Applied</div>
-                    </div>
+                    <div class="stat"><div class="val" id="statWords">-</div><div class="key">Words Extracted</div></div>
+                    <div class="stat"><div class="val" id="statChunks">-</div><div class="key">Chunks Created</div></div>
+                    <div class="stat"><div class="val" id="statRules">-</div><div class="key">Rules Applied</div></div>
                 </div>
             </div>
 
-            <!-- Evidence Card -->
+            <!-- Evidence -->
             <div class="card hidden" id="evidenceCard">
-                <h2>🔍 Retrieved Evidence</h2>
+                <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 15.803 7.5 7.5 0 0015.803 15.803z"/></svg>
+                    Retrieved Evidence
+                </div>
                 <div class="evidence-list" id="evidenceList"></div>
             </div>
         </div>
 
         <!-- Right Column -->
         <div>
-            <!-- Draft Output Card -->
+            <!-- Draft -->
             <div class="card hidden" id="draftCard">
-                <h2>📝 Generated Draft</h2>
+                <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+                    Generated Draft
+                </div>
                 <div class="tabs">
                     <div class="tab active" onclick="switchTab('view')">View Draft</div>
                     <div class="tab" onclick="switchTab('edit')">Edit & Improve</div>
                 </div>
-
-                <!-- View Tab -->
                 <div class="tab-content active" id="viewTab">
                     <div class="draft-output" id="draftOutput"></div>
                 </div>
-
-                <!-- Edit Tab -->
                 <div class="tab-content" id="editTab">
-                    <p style="color:#888; font-size:13px; margin-bottom:10px;">
-                        Edit the draft below to simulate operator feedback. The system will learn from your changes.
-                    </p>
+                    <p class="edit-hint">Edit the draft below to simulate operator feedback. The system will extract reusable rules from your changes and apply them to all future drafts.</p>
                     <textarea id="editedDraft"></textarea>
-                    <button class="btn btn-secondary" onclick="submitEdit()">
-                        🧠 Submit Edit & Extract Rules
+                    <button class="btn btn-green" onclick="submitEdit()">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                        Submit Edit & Extract Rules
                     </button>
                     <div id="editMsg"></div>
                 </div>
             </div>
 
-            <!-- Rules Card -->
+            <!-- Rules -->
             <div class="card" id="rulesCard">
-                <h2>🧠 Learned Style Rules</h2>
+                <div class="card-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                    Learned Style Rules
+                </div>
                 <div class="rules-list" id="rulesList">
-                    <p style="color:#555; font-size:13px;">No rules learned yet. Process a document and submit an edit to start learning.</p>
+                    <p class="empty-state">No rules learned yet. Process a document and submit an edit to start learning.</p>
                 </div>
             </div>
         </div>
@@ -314,14 +355,13 @@
 
 <script>
     let selectedFile = null;
-
-    // Load existing rules on page load
     window.onload = () => loadRules();
 
     function handleFileSelect(input) {
         selectedFile = input.files[0];
         if (selectedFile) {
-            document.getElementById('fileName').textContent = '✅ ' + selectedFile.name;
+            document.getElementById('fileNameText').textContent = selectedFile.name;
+            document.getElementById('fileName').classList.remove('hidden');
             document.getElementById('processBtn').disabled = false;
         }
     }
@@ -333,9 +373,43 @@
         }
     }
 
+    function renderDraft(text) {
+        const lines = text.split('\n');
+        let html = '';
+        let currentSection = null;
+        let bodyLines = [];
+
+        function flushSection() {
+            if (currentSection) {
+                html += `<div class="draft-section">
+                    <div class="draft-section-title">${currentSection.title}<span class="draft-source-tag">${currentSection.sources}</span></div>
+                    <div class="draft-section-body">${bodyLines.join('\n').trim()}</div>
+                </div>`;
+                bodyLines = [];
+                currentSection = null;
+            }
+        }
+
+        for (const line of lines) {
+            const match = line.match(/^\*\*(.+?)\*\*\s*(\[Sources:.*?\])?/);
+            if (match) {
+                flushSection();
+                currentSection = {
+                    title: match[1],
+                    sources: match[2] || ''
+                };
+            } else if (currentSection) {
+                bodyLines.push(line);
+            } else {
+                html += `<p style="color:#aaa; font-size:13px; margin-bottom:8px;">${line}</p>`;
+            }
+        }
+        flushSection();
+        return html;
+    }
+
     async function processDocument() {
         if (!selectedFile) return;
-
         document.getElementById('processBtn').disabled = true;
         document.getElementById('loading').style.display = 'block';
         document.getElementById('uploadMsg').innerHTML = '';
@@ -369,21 +443,15 @@
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('processBtn').disabled = false;
 
-                // Show stats
                 document.getElementById('statWords').textContent = data.word_count.toLocaleString();
                 document.getElementById('statChunks').textContent = data.num_chunks;
                 document.getElementById('statRules').textContent = data.style_rules_applied.length;
                 document.getElementById('statsCard').classList.remove('hidden');
 
-                // Show draft
-                const draftHtml = data.draft
-                    .replace(/\*\*(.*?)\*\*/g, '<span class="section-header">$1</span>')
-                    .replace(/\[Sources: (.*?)\]/g, '<span class="source-tag">[Sources: $1]</span>');
-                document.getElementById('draftOutput').innerHTML = draftHtml;
+                document.getElementById('draftOutput').innerHTML = renderDraft(data.draft);
                 document.getElementById('editedDraft').value = data.draft;
                 document.getElementById('draftCard').classList.remove('hidden');
 
-                // Show evidence
                 const evList = document.getElementById('evidenceList');
                 evList.innerHTML = data.evidence.map(e => `
                     <div class="evidence-item">
@@ -395,16 +463,15 @@
                     </div>
                 `).join('');
                 document.getElementById('evidenceCard').classList.remove('hidden');
-
                 loadRules();
             } else {
-                document.getElementById('uploadMsg').innerHTML = `<div class="error-msg">❌ Error: ${data.error}</div>`;
+                document.getElementById('uploadMsg').innerHTML = `<div class="error-msg">Error: ${data.error}</div>`;
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('processBtn').disabled = false;
             }
         } catch (err) {
             clearInterval(interval);
-            document.getElementById('uploadMsg').innerHTML = `<div class="error-msg">❌ Connection error. Is the server running?</div>`;
+            document.getElementById('uploadMsg').innerHTML = `<div class="error-msg">Connection error. Is the server running?</div>`;
             document.getElementById('loading').style.display = 'none';
             document.getElementById('processBtn').disabled = false;
         }
@@ -414,21 +481,23 @@
         const editedDraft = document.getElementById('editedDraft').value;
         const formData = new FormData();
         formData.append('edited_draft', editedDraft);
-
-        document.getElementById('editMsg').innerHTML = '<p style="color:#888; font-size:13px;">Analyzing edits and extracting rules...</p>';
+        document.getElementById('editMsg').innerHTML = '<p style="color:#888; font-size:13px; margin-top:10px;">Analyzing edits and extracting rules...</p>';
 
         try {
             const response = await fetch('/improve', { method: 'POST', body: formData });
             const data = await response.json();
-
             if (data.success) {
-                document.getElementById('editMsg').innerHTML = `<div class="success-msg">✅ Extracted ${data.rules_extracted.length} rules! Future drafts will improve.</div>`;
+                document.getElementById('editMsg').innerHTML = `
+                    <div class="success-msg">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/></svg>
+                        Extracted ${data.rules_extracted.length} rules — future drafts will improve.
+                    </div>`;
                 loadRules();
             } else {
-                document.getElementById('editMsg').innerHTML = `<div class="error-msg">❌ ${data.error}</div>`;
+                document.getElementById('editMsg').innerHTML = `<div class="error-msg">${data.error}</div>`;
             }
         } catch (err) {
-            document.getElementById('editMsg').innerHTML = `<div class="error-msg">❌ Error submitting edit.</div>`;
+            document.getElementById('editMsg').innerHTML = `<div class="error-msg">Error submitting edit.</div>`;
         }
     }
 
@@ -437,9 +506,8 @@
             const response = await fetch('/rules');
             const data = await response.json();
             const rulesList = document.getElementById('rulesList');
-
             if (data.rules.length === 0) {
-                rulesList.innerHTML = '<p style="color:#555; font-size:13px;">No rules learned yet. Process a document and submit an edit to start learning.</p>';
+                rulesList.innerHTML = '<p class="empty-state">No rules learned yet. Process a document and submit an edit to start learning.</p>';
             } else {
                 rulesList.innerHTML = data.rules.map((r, i) => `
                     <div class="rule-item">
@@ -453,7 +521,6 @@
     function switchTab(tab) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-
         if (tab === 'view') {
             document.querySelectorAll('.tab')[0].classList.add('active');
             document.getElementById('viewTab').classList.add('active');
@@ -463,6 +530,5 @@
         }
     }
 </script>
-
 </body>
 </html>
