@@ -2,6 +2,11 @@
   "style_rules": [
     "Always verify monetary amounts against relevant exhibits",
     "Explicitly flag any missing documentation, such as notarization",
-    "Include a dedicated section for flags and concerns in the case summary"
+    "Include a dedicated section for flags and concerns in the case summary",
+    "Maintain consistency in formatting and section headings across all drafts",
+    "Include all relevant source citations for each section",
+    "Use a standard format for listing key parties and their roles",
+    "Ensure critical facts are supported by multiple sources when possible",
+    "Ensure critical facts are supported by multiple source citations"
   ]
 }
