@@ -1,0 +1,7 @@
+{
+  "style_rules": [
+    "Always verify monetary amounts against relevant exhibits",
+    "Explicitly flag any missing documentation, such as notarization",
+    "Include a dedicated section for flags and concerns in the case summary"
+  ]
+}
