@@ -6,17 +6,13 @@ A production-ready pipeline that ingests messy legal-style documents, extracts s
 ---
 
 ## Architecture Overview
-PDF Input
-↓
-[Stage 1] Document Processing (PyMuPDF → pdfplumber → OCR fallback)
-↓
-[Stage 2] Grounded Retrieval (SentenceTransformers + FAISS)
-↓
-[Stage 3] Draft Generation (Groq LLaMA-3.3-70b)
-↓
-[Stage 4] Improvement Loop (Edit diff → Rule extraction → Memory)
-↓
-JSON Output + Updated Style Rules
+
+| Stage | Component | Technology |
+|-------|-----------|------------|
+| Stage 1 | Document Processing | PyMuPDF → pdfplumber → OCR fallback |
+| Stage 2 | Grounded Retrieval | SentenceTransformers + FAISS |
+| Stage 3 | Draft Generation | Groq LLaMA-3.3-70b |
+| Stage 4 | Improvement Loop | Edit diff → Rule extraction → Memory |
 
 ---
 
@@ -41,8 +37,10 @@ cd ambitio-ai-intern
 ### 2. Create and activate virtual environment
 ```bash
 python -m venv venv
+
 # Windows
 venv\Scripts\activate
+
 # Mac/Linux
 source venv/bin/activate
 ```
@@ -66,7 +64,7 @@ Get a free API key at [console.groq.com](https://console.groq.com)
 python main.py sample_inputs/sample_inputs.pdf
 ```
 
-### Run the improvement loop (after running pipeline at least once)
+### Run the improvement loop
 ```bash
 python main.py improve
 ```
@@ -84,19 +82,14 @@ python main.py sample_inputs/sample_inputs.pdf
 A 10-page legal complaint — *Margie Lou Welch v. Makemson* — filed in the Superior Court of Alaska, involving fiduciary duty breach and fraudulent use of an access device.
 
 **Output:** `sample_outputs/draft_output.json`
-A structured case fact summary with:
-- Overview
-- Key Parties
-- Key Dates & Events
-- Critical Facts
-- Flags & Concerns
+A structured case fact summary with Overview, Key Parties, Key Dates & Events, Critical Facts, and Flags & Concerns.
 
 ---
 
 ## Assumptions & Tradeoffs
 
 | Decision | Reasoning |
-|---|---|
+|----------|-----------|
 | PyMuPDF → pdfplumber → OCR fallback chain | Handles both digital and scanned PDFs gracefully |
 | FAISS with all-MiniLM-L6-v2 embeddings | Fast, lightweight, no API cost for retrieval |
 | Groq LLaMA-3.3-70b for generation | Free, fast, high quality |
@@ -108,12 +101,12 @@ A structured case fact summary with:
 
 ## Evaluation
 
-| Stage | What was tested |
-|---|---|
-| Document Processing | Extracted 2136 words from 10-page legal PDF correctly |
-| Retrieval | All 5 chunks retrieved with relevance scores |
-| Draft Generation | Structured output grounded in source, no hallucinations |
-| Improvement Loop | 3 rules extracted and applied in subsequent run |
+| Stage | What was tested | Result |
+|-------|----------------|--------|
+| Document Processing | 10-page legal PDF | Extracted 2136 words correctly |
+| Retrieval | 5 chunks retrieved | All returned with relevance scores |
+| Draft Generation | Grounded summary | No hallucinations, fully structured |
+| Improvement Loop | 3 rules extracted | Applied successfully in next run |
 
 ---
 
@@ -121,18 +114,18 @@ A structured case fact summary with:
 ambitio-ai-intern/
 ├── src/
 │   ├── document_processing/
-│   │   └── extractor.py       # OCR + text extraction
+│   │   └── extractor.py        # OCR + text extraction
 │   ├── retrieval/
-│   │   └── retriever.py       # FAISS vector search
+│   │   └── retriever.py        # FAISS vector search
 │   ├── drafting/
-│   │   └── generator.py       # Groq draft generation
+│   │   └── generator.py        # Groq draft generation
 │   ├── improvement/
-│   │   └── editor.py          # Operator edit learning
-│   └── config.py              # Central configuration
-├── sample_inputs/             # Input PDF documents
-├── sample_outputs/            # Generated drafts (JSON)
-├── main.py                    # Pipeline entry point
-├── edit_memory.json           # Persistent style rules
+│   │   └── editor.py           # Operator edit learning
+│   └── config.py               # Central configuration
+├── sample_inputs/              # Input PDF documents
+├── sample_outputs/             # Generated drafts (JSON)
+├── main.py                     # Pipeline entry point
+├── edit_memory.json            # Persistent style rules
+├── ARCHITECTURE.md             # System architecture details
 ├── requirements.txt
-└── .env                       # API keys (not committed)
-
+└── .env                        # API keys (not committed)
